@@ -1,0 +1,20 @@
+# Ambiente virtual
+.venv/
+
+# Configuração local com senha do banco
+.env
+
+# Cache do Python e dos testes
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Gerados pelo PyInstaller
+build/
+dist/
+
+# Backups do banco 
+backups/
+
+# Editor
+.vscode/
