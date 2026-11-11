@@ -71,8 +71,3 @@ CREATE INDEX idx_bonus_vendedora   ON bonus_campanha (vendedora_id, mes_referenc
 CREATE INDEX idx_bonus_campanha    ON bonus_campanha (campanha_id);
 
 
-INSERT INTO categorias (nome, tipo, percentual_comissao) VALUES
-    ('Venda de aparelhos', 'VENDA', 8.00),
-    ('Acessórios', 'VENDA', 10.00),
-    ('Serviços técnicos', 'SERVICO', 15.00),
-    ('Seguros e garantias', 'SERVICO', 12.00);
