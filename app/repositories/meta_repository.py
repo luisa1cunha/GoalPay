@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, joinedload
 from app.models import Meta, Vendedora
-from app.repositories.periodo import primeiro_dia_do_mes
+from app.repositories.periodo_repository import primeiro_dia_do_mes
 
 
 def buscar(s: Session, vendedora_id: int, mes: date) -> Optional[Meta]:

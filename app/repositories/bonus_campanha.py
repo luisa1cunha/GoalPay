@@ -3,9 +3,8 @@ from decimal import Decimal
 from typing import Optional
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, joinedload
-from app.models import BonusCampanha
-from app.repositories.periodo import primeiro_dia_do_mes
-
+from app.models.bonus_campanha import BonusCampanha
+from app.repositories.periodo_repository import primeiro_dia_do_mes
 
 def salvar(s: Session, bonus: BonusCampanha) -> BonusCampanha:
     s.add(bonus)
@@ -13,7 +12,17 @@ def salvar(s: Session, bonus: BonusCampanha) -> BonusCampanha:
     return bonus
 
 
+def ja_concedido(s: Session, campanha_id: int, vendedora_id: int) -> bool:
+    #Cada campanha paga uma única vez por vendedora
+    q = select(BonusCampanha.id).where(
+        BonusCampanha.campanha_id == campanha_id,
+        BonusCampanha.vendedora_id == vendedora_id,
+    )
+    return s.scalars(q).first() is not None
+
+
 def existe(s: Session, campanha_id: int, vendedora_id: int, mes: date) -> bool:
+    #Se já existe bônus dessa campanha para a vendedora naquele mês
     q = select(BonusCampanha.id).where(
         BonusCampanha.campanha_id == campanha_id,
         BonusCampanha.vendedora_id == vendedora_id,
@@ -23,11 +32,7 @@ def existe(s: Session, campanha_id: int, vendedora_id: int, mes: date) -> bool:
 
 
 def listar_do_mes(s: Session, mes: date, vendedora_id: Optional[int] = None) -> list[BonusCampanha]:
-    q = (
-        select(BonusCampanha)
-        .options(joinedload(BonusCampanha.campanha), joinedload(BonusCampanha.vendedora))
-        .where(BonusCampanha.mes_referencia == primeiro_dia_do_mes(mes))
-    )
+    q = (select(BonusCampanha).options(joinedload(BonusCampanha.campanha), joinedload(BonusCampanha.vendedora)).where(BonusCampanha.mes_referencia == primeiro_dia_do_mes(mes)))
     if vendedora_id is not None:
         q = q.where(BonusCampanha.vendedora_id == vendedora_id)
     return list(s.scalars(q))
@@ -43,6 +48,7 @@ def total_do_mes(s: Session, mes: date, vendedora_id: Optional[int] = None) -> D
 
 
 def totais_por_vendedora(s: Session, mes: date) -> dict[int, Decimal]:
+    #id da vendedora: bônus total no mês. Vendedoras sem bônus não aparecem
     q = (
         select(BonusCampanha.vendedora_id, func.sum(BonusCampanha.valor_bonus))
         .where(BonusCampanha.mes_referencia == primeiro_dia_do_mes(mes))

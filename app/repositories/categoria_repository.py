@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 from app.models import Categoria
 
@@ -17,6 +17,13 @@ def buscar_por_id(s: Session, categoria_id: int) -> Optional[Categoria]:
 
 def buscar_por_nome(s: Session, nome: str) -> Optional[Categoria]:
     return s.scalars(select(Categoria).where(Categoria.nome == nome)).first()
+
+
+def existe_nome(s: Session, nome: str, ignorar_id: Optional[int] = None) -> bool:
+    q = select(Categoria.id).where(func.lower(Categoria.nome) == func.lower(nome))
+    if ignorar_id is not None:
+        q = q.where(Categoria.id != ignorar_id)
+    return s.scalars(q).first() is not None
 
 
 def salvar(s: Session, categoria: Categoria) -> Categoria:

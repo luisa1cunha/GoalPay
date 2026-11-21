@@ -1,10 +1,7 @@
-
 import re
 import sys
 from pathlib import Path
-
 from sqlalchemy import create_engine, text
-
 from app.database import _montar_url
 
 url = _montar_url()

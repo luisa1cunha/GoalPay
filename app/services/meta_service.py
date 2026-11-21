@@ -1,6 +1,5 @@
 from datetime import date
 from decimal import Decimal
-
 from app.services.comissao_service import ZERO, arredondar, para_decimal
 
 

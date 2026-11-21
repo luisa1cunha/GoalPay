@@ -4,11 +4,11 @@ from decimal import Decimal
 from app.models import BonusCampanha, Campanha, Categoria, Venda, Vendedora
 from app.repositories import (
     bonus_campanha as bonus_repo,
-    campanha as campanha_repo,
-    categoria as categoria_repo,
-    meta as meta_repo,
-    venda as venda_repo,
-    vendedora as vendedora_repo,
+    campanha_repository as campanha_repo,
+    categoria_repository as categoria_repo,
+    meta_repository as meta_repo,
+    venda_repository as venda_repo,
+    vendedora_repository as vendedora_repo,
 )
 
 OUT_INI, OUT_FIM = date(2026, 10, 1), date(2026, 10, 31)
